@@ -6,7 +6,8 @@ module TranslationsChecker
   class Change
     attr_reader :file_diff, :name, :new_line, :old_line
 
-    delegate :locale, to: :file_diff
+    delegate :locale, :locale_file,                                to: :file_diff
+    delegate :old_key_at, :new_key_at, :old_content, :new_content, to: :locale_file
 
     def initialize(file_diff, name, change)
       @file_diff = file_diff
@@ -14,16 +15,20 @@ module TranslationsChecker
       @new_line, @old_line = change.values_at("+", "-")
     end
 
-    def new_value
-      deleted? ? nil : file_diff.locale_file[full_key]
+    def full_key
+      deleted? ? old_key_at(old_line) : new_key_at(new_line)
     end
 
-    def full_key
-      file_diff.locale_file.key_at(new_line)
+    def new_value
+      deleted? ? nil : new_content[full_key]
+    end
+
+    def old_value
+      added? ? nil : old_content[full_key]
     end
 
     def display_key
-      deleted? ? [name] : full_key.drop(1)
+      full_key.drop(1)
     end
 
     # :reek:NilCheck
