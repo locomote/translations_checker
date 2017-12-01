@@ -6,4 +6,4 @@ $LOAD_PATH << "#{root}/lib" if File.exist?("#{root}/Gemfile")
 require "translations_checker"
 require "translations_checker/issues_presenter"
 
-TranslationsChecker::Checker.run
+TranslationsChecker::Checker.call

@@ -4,12 +4,30 @@ require "translations_checker/terminal_colours"
 require "translations_checker/indentation"
 require "translations_checker/git_diff"
 require "translations_checker/change_checker"
+require "translations_checker/concerns/service"
 
 module TranslationsChecker
   class Checker
+    include Concerns::Service
     include TerminalColours
 
     using Indentation
+
+    # :reek:TooManyStatements
+    def call
+      if issues.empty?
+        puts green("No translations issues detected.")
+        return
+      end
+
+      puts yellow("Please correct the following translations issues before pushing:\n")
+      puts IssuesPresenter.new(issues)
+      puts "\n#{example}\n"
+      puts yellow("Don't forget to keep the .yml keys hierarchy\n")
+      exit 1
+    end
+
+    private
 
     def file_issues(en_diff)
       translated_locales.flat_map { |locale| check_translation(locale, en_diff) }
@@ -18,31 +36,6 @@ module TranslationsChecker
     def issues
       @issues ||= diffs_for_locale("en").flat_map(&method(:file_issues))
     end
-
-    # :reek:TooManyStatements
-    # rubocop:disable Metrics/AbcSize, Metrics/MethodLength
-    def run
-      if issues.empty?
-        puts green("No translations issues detected.")
-        return
-      end
-
-      puts yellow("Please correct the following translations issues before pushing:")
-      puts
-      puts IssuesPresenter.new(diffs_for_locale("en").flat_map(&method(:file_issues)))
-      puts
-      puts example
-      puts
-      puts yellow("Don't forget to keep the .yml keys hierarchy\n")
-      exit 1
-    end
-    # rubocop:enable Metrics/AbcSize, Metrics/MethodLength
-
-    def self.run
-      new.run
-    end
-
-    private
 
     def example
       <<~EXAMPLE
