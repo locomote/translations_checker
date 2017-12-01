@@ -1,7 +1,7 @@
 PATH
   remote: .
   specs:
-    translations_checker (1.2.10)
+    translations_checker (1.2.11)
       activesupport (>= 4.2.9)
       naught (~> 1.1.0)
 

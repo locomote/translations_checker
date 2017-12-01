@@ -88,10 +88,11 @@ RSpec.describe TranslationsChecker::LocaleFile do
   describe "#content" do
     let(:path) { fixture_dir.join("xx/xx.yml") }
 
-    it "returns a locale file content object built from the locale file's contents", :aggregate_failures do
+    it "returns a locale file content object built from the locale file's contents fetched using `git show`", :aggregate_failures do
       file_content = path.read
       expected_locale_file_content = double :locale_file_content
 
+      expect(TranslationsChecker::GitShow).to receive(:call).with(path).and_return file_content
       expect(TranslationsChecker::LocaleFileContent).to receive(:new).with(file_content).and_return(expected_locale_file_content)
       expect(locale_file.content).to be expected_locale_file_content
     end
