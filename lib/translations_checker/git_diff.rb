@@ -8,7 +8,7 @@ module TranslationsChecker
 
     attr_reader :path, :ref
 
-    def initialize(path, ref: "origin/master")
+    def initialize(path, ref: "origin/master...HEAD")
       @path = path
       @ref = ref
     end
