@@ -1,12 +1,9 @@
 require "translations_checker/locale_file"
 
 require "yaml"
-require "fossicker"
 
 module TranslationsChecker
   class LocaleFileContent
-    using Fossicker
-
     attr_reader :yaml
 
     def initialize(yaml)
@@ -14,7 +11,9 @@ module TranslationsChecker
     end
 
     def [](key_path)
-      content.fossick(*key_path, default: nil)
+      return content if key_path.empty?
+
+      content.dig(*key_path)
     end
 
     def to_h

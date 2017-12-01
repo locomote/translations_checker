@@ -22,7 +22,6 @@ Gem::Specification.new do |spec|
   spec.required_ruby_version = ">= 2.3.1"
 
   spec.add_runtime_dependency "activesupport", ">= 4.2.9"
-  spec.add_runtime_dependency "fossicker", "~> 1.0.0"
   spec.add_runtime_dependency "naught", "~> 1.1.0"
 
   spec.add_development_dependency "bundler", "~> 1.16"
