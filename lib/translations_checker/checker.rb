@@ -21,7 +21,7 @@ module TranslationsChecker
       end
 
       puts yellow("Please correct the following translations issues before pushing:\n")
-      puts IssuesPresenter.new(issues)
+      puts IssuesPresenter.call(issues)
       puts "\n#{example}\n"
       puts yellow("Don't forget to keep the .yml keys hierarchy\n")
       exit 1

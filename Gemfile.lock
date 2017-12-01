@@ -1,7 +1,7 @@
 PATH
   remote: .
   specs:
-    translations_checker (1.2.6)
+    translations_checker (1.2.8)
       activesupport (>= 4.2.9)
       fossicker (~> 1.0.0)
       naught (~> 1.1.0)

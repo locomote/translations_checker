@@ -1,7 +1,9 @@
 require "translations_checker/issue_presenter"
+require "translations_checker/concerns/service"
 
 module TranslationsChecker
   class IssuesPresenter
+    include Concerns::Service
     include TerminalColours
 
     using Indentation
@@ -17,7 +19,7 @@ module TranslationsChecker
     end
 
     # :reek:NestedIterators
-    def to_s
+    def call
       issues_by_destination_path.map do |path, issues|
         [green(path), *issues.map { |issue| IssuePresenter.present(issue).strip.indent("  ") }].join("\n")
       end.join("\n\n")
