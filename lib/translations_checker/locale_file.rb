@@ -1,14 +1,12 @@
-require "translations_checker/delegation"
 require "translations_checker/locale_file_key_map"
 require "translations_checker/locale_file_content"
 
 require "pathname"
+require "active_support/all"
 
 # :reek:TooManyInstanceVariables
 module TranslationsChecker
   class LocaleFile
-    include Delegation
-
     attr_reader :path
 
     delegate :exist?, :to_s, to: :path

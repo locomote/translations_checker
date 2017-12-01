@@ -1,8 +1,12 @@
 require "naught"
 
+require "active_support/all"
+
 module TranslationsChecker
   class Change
     attr_reader :file_diff, :name, :new_line, :old_line
+
+    delegate :locale, to: :file_diff
 
     def initialize(file_diff, name, change)
       @file_diff = file_diff
@@ -71,10 +75,6 @@ module TranslationsChecker
 
     def display_key
       full_key.drop([1, full_key.size - 1].min)
-    end
-
-    def nil?
-      true
     end
   end
 end

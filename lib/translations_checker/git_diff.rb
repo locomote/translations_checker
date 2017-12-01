@@ -1,10 +1,14 @@
+require "translations_checker/concerns/service"
+
 module TranslationsChecker
   class GitDiff
+    include Concerns::Service
+
     DEFAULT_OPTIONS = { diff_filter: "AM" }.freeze
 
     attr_reader :path, :ref
 
-    def initialize(path, ref:)
+    def initialize(path, ref: "origin/master")
       @path = path
       @ref = ref
     end
@@ -18,10 +22,6 @@ module TranslationsChecker
       diff.split(/^(?=diff\s--git\s)/).each_with_object({}) do |file_diff, memo|
         memo[path_from_file_diff(file_diff)] = hunks_from_file_diff(file_diff)
       end
-    end
-
-    def self.call(path, ref: "origin/master")
-      new(path, ref: ref).call
     end
 
     private

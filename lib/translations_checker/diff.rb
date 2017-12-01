@@ -1,11 +1,10 @@
 require "translations_checker/locale_file"
 require "translations_checker/diff_block"
-require "translations_checker/delegation"
+
+require "active_support/all"
 
 module TranslationsChecker
   class Diff
-    include Delegation
-
     attr_reader :path, :hunks
 
     delegate :locale, to: :locale_file
