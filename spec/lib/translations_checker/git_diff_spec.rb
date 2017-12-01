@@ -65,14 +65,14 @@ RSpec.describe TranslationsChecker::GitDiff do
 
         expect(git_diff.call).to eq(
           "config/locales/en/layouts.yml" => [
-            [  8... 9,  8... 9, bodies[0] ],
-            [ 14...16, 14...16, bodies[1] ],
-            [ 20...21, 19...19, bodies[2] ],
-            [ 28...28, 28...29, bodies[3] ]
+            [  8,  8, bodies[0] ],
+            [ 14, 14, bodies[1] ],
+            [ 20, 19, bodies[2] ],
+            [ 28, 28, bodies[3] ]
           ],
           "config/locales/ja/layouts.yml" => [
-            [  8... 9,  8... 9,  bodies[4] ],
-            [ 15...16, 15...16, bodies[5] ]
+            [  8,  8,  bodies[4] ],
+            [ 15, 15, bodies[5] ]
           ]
         )
       end

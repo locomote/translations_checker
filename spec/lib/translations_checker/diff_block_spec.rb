@@ -16,7 +16,7 @@ RSpec.describe TranslationsChecker::DiffBlock do
         BODY
       end
 
-      let(:diff_block) { described_class.new(file_diff, 8...10, 4...6, body) }
+      let(:diff_block) { described_class.new(file_diff, 8, 4, body) }
 
       it "returns the changes" do
         changes = [ double(:first_change), double(:second_change) ]
@@ -33,7 +33,7 @@ RSpec.describe TranslationsChecker::DiffBlock do
         BODY
       end
 
-      let(:diff_block) { described_class.new(file_diff, 6...7, 8...8, body) }
+      let(:diff_block) { described_class.new(file_diff, 6, 8, body) }
 
       it "returns the changes" do
         change = double(:change)
@@ -49,7 +49,7 @@ RSpec.describe TranslationsChecker::DiffBlock do
         BODY
       end
 
-      let(:diff_block) { described_class.new(file_diff, 2...2, 5...6, body) }
+      let(:diff_block) { described_class.new(file_diff, 2, 5, body) }
 
       it "returns the changes" do
         change = double(:change)

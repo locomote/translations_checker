@@ -2,11 +2,12 @@ require "translations_checker/change"
 
 module TranslationsChecker
   class DiffBlock
-    attr_reader :file_diff, :hunks, :body
+    attr_reader :file_diff, :old_line, :new_line, :body
 
-    def initialize(file_diff, *hunks, body)
+    def initialize(file_diff, old_line, new_line, body)
       @file_diff = file_diff
-      @hunks = hunks
+      @old_line = old_line
+      @new_line = new_line
       @body = body
     end
 
@@ -42,7 +43,7 @@ module TranslationsChecker
     end
 
     def key_change_factory
-      counters = { "-" => old_hunk.begin - 1, "+" => new_hunk.begin - 1 }
+      counters = { "-" => old_line - 1, "+" => new_line - 1 }
       proc do |line|
         counters[line[0]] += 1
         change_type, key = line.scan(/^([+-])\s*(\w+):/).flatten
@@ -56,14 +57,6 @@ module TranslationsChecker
     #   "key_3" => [["key_3", 2, "+"]]
     def key_changes_by_key
       key_changes.group_by(&:first)
-    end
-
-    def old_hunk
-      hunks.first
-    end
-
-    def new_hunk
-      hunks.last
     end
   end
 end

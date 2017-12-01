@@ -19,7 +19,7 @@ module TranslationsChecker
     end
 
     def blocks
-      @blocks ||= hunks.map { |old_lines, new_lines, body| DiffBlock.new(self, old_lines, new_lines, body) }
+      @blocks ||= hunks.map { |*lines, body| DiffBlock.new(self, *lines, body) }
     end
 
     def changes

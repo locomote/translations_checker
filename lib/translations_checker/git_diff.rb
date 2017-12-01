@@ -30,23 +30,10 @@ module TranslationsChecker
       file_diff.scan(%r[^\+{3}\sb/(.*?)$]).flatten.first
     end
 
-    # Parses hunk ranges in the format "<line>[,<size>]". Note that <size> defaults to 1.
-    #
-    #   "123,4" => 123...127
-    #   "321,0" => 321...321
-    #   "123"   => 123...124
-    #
-    # :reek:NilCheck
-    def to_hunk_range(string)
-      line, size = string.scan(/\A(\d+)(?:,(\d+))?\z/).flatten
-      line = line.to_i
-      line...(line + (size&.to_i || 1))
-    end
-
     def hunks_from_file_diff(file_diff)
       file_diff.split(/(?=^@@\s+.*?\s+@@)/).drop(1).map do |diff_hunk|
-        *hunk_ranges, body = diff_hunk.scan(/\A@@\s+-(\d+(?:,\d+)?)\s+\+(\d+(?:,\d+)?).*?\n(.*)\z/m).flatten
-        [*hunk_ranges.map(&method(:to_hunk_range)), body]
+        *hunk_lines, body = diff_hunk.scan(/\A@@\s+-(\d+)(?:,\d+)?\s+\+(\d+)(?:,\d+)?.*?\n(.*)\z/m).flatten
+        [*hunk_lines.map(&:to_i), body]
       end
     end
   end
