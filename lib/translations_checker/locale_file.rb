@@ -1,5 +1,6 @@
 require "translations_checker/locale_file_key_map"
 require "translations_checker/locale_file_content"
+require "translations_checker/git_show"
 
 require "pathname"
 require "active_support/all"
@@ -37,7 +38,7 @@ module TranslationsChecker
     end
 
     def content
-      @content ||= LocaleFileContent.new(path.read)
+      @content ||= LocaleFileContent.new(GitShow.call(path))
     end
 
     def key_map

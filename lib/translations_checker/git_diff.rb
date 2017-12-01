@@ -4,8 +4,6 @@ module TranslationsChecker
   class GitDiff
     include Concerns::Service
 
-    DEFAULT_OPTIONS = { diff_filter: "AM" }.freeze
-
     attr_reader :path, :ref
 
     def initialize(path, ref: "origin/master...HEAD")
