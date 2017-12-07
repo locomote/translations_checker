@@ -83,6 +83,21 @@ RSpec.describe TranslationsChecker::LocaleFileKeyMap do
         expect(key_map.key_at(6)).to be_nil
       end
     end
+
+    context "given a line nested inside a key containing slashes" do
+      let(:yaml) do
+        <<~YAML
+          root:
+            parent/1:
+              child_1: "child 1"
+              child_2: "child 2"
+        YAML
+      end
+
+      it "returns the full key for the given line number" do
+        expect(key_map.key_at(4)).to eq %w(root parent/1 child_2)
+      end
+    end
   end
 
   describe "#key_line" do

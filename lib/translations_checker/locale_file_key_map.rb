@@ -22,7 +22,7 @@ module TranslationsChecker
 
     def key_lines
       lines.each_with_index.map do |line, index|
-        indent, key = line.scan(/(\A\s*)(?:(\w+):)?/).flatten
+        indent, key = line.scan(%r{(\A\s*)(?:(\w[/\w]+):)?}).flatten
         [index + 1, indent.size / 2, key]
       end.select(&:last)
     end
