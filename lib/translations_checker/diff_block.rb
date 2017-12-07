@@ -46,7 +46,7 @@ module TranslationsChecker
       counters = { "-" => old_line - 1, "+" => new_line - 1 }
       proc do |line|
         counters[line[0]] += 1
-        change_type, key = line.scan(/^([+-])\s*(\w+):/).flatten
+        change_type, key = line.scan(%r{^([+-])\s*(\w[/\w]+):}).flatten
         [key, counters[change_type], change_type] if change_type
       end
     end

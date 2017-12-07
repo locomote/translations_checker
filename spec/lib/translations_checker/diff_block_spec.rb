@@ -26,6 +26,26 @@ RSpec.describe TranslationsChecker::DiffBlock do
       end
     end
 
+    context "when there are keys containing slashes" do
+      let(:body) do
+        <<~BODY
+          -  key/1: Old value 1
+          -  key/2: Old value 2
+          +  key/1: New value 1
+          +  key/2: New value 2
+        BODY
+      end
+
+      let(:diff_block) { described_class.new(file_diff, 8, 4, body) }
+
+      it "returns the changes" do
+        changes = [ double(:first_change), double(:second_change) ]
+        allow(TranslationsChecker::Change).to receive(:new).with(file_diff, "key/1", "-" => 8, "+" => 4).and_return changes[0]
+        allow(TranslationsChecker::Change).to receive(:new).with(file_diff, "key/2", "-" => 9, "+" => 5).and_return changes[1]
+        expect(diff_block.changes).to eq changes
+      end
+    end
+
     context "when a key has been removed" do
       let(:body) do
         <<~BODY
