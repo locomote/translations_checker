@@ -1,5 +1,3 @@
-require "naught"
-
 require "active_support/all"
 
 module TranslationsChecker
@@ -58,28 +56,6 @@ module TranslationsChecker
 
     def ==(other)
       file_diff == other.file_diff && name == other.name && old_line == other.old_line && new_line == other.new_line
-    end
-  end
-
-  # TODO: I'm being a bit lazy here - I'm using the naught gem, even though this doesn't exactly fit the usual
-  #       null-object pattern
-  NoChange = Naught.build do |config|
-    config.predicates_return false
-    config.mimic Change
-
-    attr_reader :file_diff, :full_key
-
-    def initialize(file_diff, full_key)
-      @file_diff = file_diff
-      @full_key = full_key
-    end
-
-    def name
-      full_key.last
-    end
-
-    def display_key
-      full_key.drop([1, full_key.size - 1].min)
     end
   end
 end

@@ -1,6 +1,7 @@
 require "spec_helper"
 
 require "translations_checker/change"
+require "translations_checker/no_change"
 require "translations_checker/change_checker"
 
 RSpec.describe TranslationsChecker::ChangeChecker do

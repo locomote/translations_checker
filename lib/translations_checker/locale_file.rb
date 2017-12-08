@@ -11,8 +11,8 @@ module TranslationsChecker
     attr_reader :path
 
     delegate :exist?, :to_s, to: :path
-    delegate :key_at,        to: :new_key_map, prefix: :new
-    delegate :key_at,        to: :old_key_map, prefix: :old
+    delegate :key_at, :key_line, to: :new_key_map, prefix: :new
+    delegate :key_at, :key_line, to: :old_key_map, prefix: :old
 
     def initialize(path)
       @path = Pathname(path)

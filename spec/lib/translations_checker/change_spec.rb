@@ -72,7 +72,21 @@ RSpec.describe TranslationsChecker::Change do
   end
 
   describe "#display_key" do
-    it "returns the full key without the locale name"
+    it "returns the full key without the locale name" do
+      change = described_class.new(nil, nil, {})
+      allow(change).to receive(:full_key).and_return %w(xx yy zz)
+
+      expect(change.display_key).to eq %w(yy zz)
+    end
+
+    context "when the full key is empty" do
+      it "returns an empty key" do
+        change = described_class.new(nil, nil, {})
+        allow(change).to receive(:full_key).and_return []
+
+        expect(change.display_key).to eq []
+      end
+    end
   end
 
   context "when a value has been added" do

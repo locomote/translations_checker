@@ -1,4 +1,5 @@
 require "translations_checker/diff"
+require "translations_checker/empty_diff"
 require "translations_checker/issues_presenter"
 require "translations_checker/terminal_colours"
 require "translations_checker/indentation"
@@ -58,7 +59,7 @@ module TranslationsChecker
     end
 
     def diff_for_locale_file(locale_file)
-      diffs.detect { |diff| diff.locale_file == locale_file } || EmptyDiff.new(locale_file)
+      diffs.detect { |diff| diff.locale_file == locale_file } || EmptyDiff.new(locale_file.path)
     end
 
     def locales
