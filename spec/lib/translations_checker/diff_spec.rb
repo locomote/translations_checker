@@ -64,38 +64,21 @@ RSpec.describe TranslationsChecker::Diff do
 
     context "when there is no matching change" do
       context "when the other change has a full key" do
-        it "returns a 'no change' object with the full key", :aggregate_failures do
+        it "returns a 'no change' object with the full key in this locale", :aggregate_failures do
           other_change = instance_double(
             "TranslationsChecker::Change",
             :other_change,
             matches?: false,
-            full_key: %w(xx yy)
+            full_key: %w(zz yy)
           )
           diff = described_class.new("xx/yy.yml", [])
+          allow(diff).to receive(:locale).and_return "zz"
 
           no_change = instance_double "TranslationsChecker::NoChange", :no_change
 
-          expect(TranslationsChecker::NoChange).to receive(:new).with(diff, %w(xx yy)).and_return no_change
+          expect(TranslationsChecker::NoChange).to receive(:new).with(diff, %w(zz yy)).and_return no_change
           expect(diff.match_change(other_change)).to be no_change
         end
-      end
-    end
-
-    context "when the other change does not have a full key" do
-      it "returns a 'no change' object with the name", :aggregate_failures do
-        other_change = instance_double(
-          "TranslationsChecker::Change",
-          :other_change,
-          matches?: false,
-          full_key: nil,
-          name:     "xx"
-        )
-        diff = described_class.new("xx/yy.yml", [])
-
-        no_change = instance_double "TranslationsChecker::NoChange", :no_change
-
-        expect(TranslationsChecker::NoChange).to receive(:new).with(diff, "xx").and_return no_change
-        expect(diff.match_change(other_change)).to be no_change
       end
     end
   end

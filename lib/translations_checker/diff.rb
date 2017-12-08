@@ -1,5 +1,6 @@
 require "translations_checker/locale_file"
 require "translations_checker/diff_block"
+require "translations_checker/no_change"
 
 require "active_support/all"
 
@@ -29,17 +30,11 @@ module TranslationsChecker
     # :reek:FeatureEnvy
     def match_change(other_change)
       this_change = changes.detect(&other_change.method(:matches?))
-      this_change || NoChange.new(self, other_change.full_key || other_change.name)
+      this_change || NoChange.new(self, [locale, *other_change.full_key.drop(1)])
     end
 
     def match_changes(other_diff)
       changes.zip(changes.map(&other_diff.method(:match_change)))
-    end
-  end
-
-  class EmptyDiff < Diff
-    def initialize(path)
-      super(path, [])
     end
   end
 end

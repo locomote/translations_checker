@@ -6,9 +6,14 @@ module TranslationsChecker
 
     attr_reader :path, :ref
 
-    def initialize(path, ref: "HEAD")
+    REF_ALIASES = {
+      current:  "HEAD",
+      original: "$(git merge-base origin/master HEAD)"
+    }.freeze
+
+    def initialize(path, ref: :current)
       @path = path
-      @ref = ref
+      @ref = REF_ALIASES.fetch(ref, ref)
     end
 
     def call

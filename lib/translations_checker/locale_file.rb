@@ -11,8 +11,8 @@ module TranslationsChecker
     attr_reader :path
 
     delegate :exist?, :to_s, to: :path
-    delegate :key_at,        to: :key_map
-    delegate :[],            to: :content
+    delegate :key_at, :key_line, to: :new_key_map, prefix: :new
+    delegate :key_at, :key_line, to: :old_key_map, prefix: :old
 
     def initialize(path)
       @path = Pathname(path)
@@ -37,12 +37,20 @@ module TranslationsChecker
       path == other.path
     end
 
-    def content
-      @content ||= LocaleFileContent.new(GitShow.call(path))
+    def new_content
+      @new_content ||= LocaleFileContent.new(GitShow.call(path))
     end
 
-    def key_map
-      @key_map ||= LocaleFileKeyMap.new(content)
+    def new_key_map
+      @new_key_map ||= LocaleFileKeyMap.new(new_content)
+    end
+
+    def old_content
+      @old_content ||= LocaleFileContent.new(GitShow.call(path, ref: :original))
+    end
+
+    def old_key_map
+      @old_key_map ||= LocaleFileKeyMap.new(old_content)
     end
 
     private

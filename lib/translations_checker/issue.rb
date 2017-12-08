@@ -4,7 +4,8 @@ module TranslationsChecker
   class Issue
     attr_reader :change, :locale_change
 
-    delegate :display_key, to: :change
+    delegate :display_key, :locale_file, :locale, to: :change
+    delegate :new_key_line,                       to: :locale_file
 
     def initialize(change, locale_change)
       @change = change
@@ -32,7 +33,7 @@ module TranslationsChecker
     end
 
     def new_destination_line
-      locale_change.new_line
+      locale_change.new_line || new_key_line([locale, *display_key])
     end
 
     def old_destination_line

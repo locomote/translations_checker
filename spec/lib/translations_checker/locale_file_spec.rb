@@ -85,55 +85,55 @@ RSpec.describe TranslationsChecker::LocaleFile do
     end
   end
 
-  describe "#content" do
+  describe "#new_content" do
     let(:path) { fixture_dir.join("xx/xx.yml") }
 
-    it "returns a locale file content object built from the locale file's contents fetched using `git show`", :aggregate_failures do
+    it "returns a locale file content object built from the locale file's new contents", :aggregate_failures do
       file_content = path.read
       expected_locale_file_content = double :locale_file_content
 
       expect(TranslationsChecker::GitShow).to receive(:call).with(path).and_return file_content
       expect(TranslationsChecker::LocaleFileContent).to receive(:new).with(file_content).and_return(expected_locale_file_content)
-      expect(locale_file.content).to be expected_locale_file_content
+      expect(locale_file.new_content).to be expected_locale_file_content
     end
   end
 
-  describe "#[]" do
+  describe "#new_key_map" do
     let(:path) { "xx/yy.yml" }
 
-    it "delegates to the locale file's content" do
-      expected_value = double :value
-      content = instance_double "TranslationsChecker::LocaleFileContent", :locale_file_content
-      allow(locale_file).to receive(:content).and_return(content)
-
-      expect(content).to receive(:[]).with(%w(en hello)).and_return(expected_value)
-      expect(locale_file[%w(en hello)]).to be expected_value
-    end
-  end
-
-  describe "#key_map" do
-    let(:path) { "xx/yy.yml" }
-
-    it "returns a locale file key map object built from the locale file's contents", :aggregate_failures do
+    it "returns a locale file key map object built from the locale file's new contents", :aggregate_failures do
       locale_file_content = instance_double "TranslationsChecker::LocaleFileContent", :locale_file_content
       expected_locale_file_key_map = double :locale_file_key_map
 
-      expect(locale_file).to receive(:content).and_return(locale_file_content)
+      expect(locale_file).to receive(:new_content).and_return(locale_file_content)
       expect(TranslationsChecker::LocaleFileKeyMap).to receive(:new).with(locale_file_content).and_return(expected_locale_file_key_map)
-      expect(locale_file.key_map).to be expected_locale_file_key_map
+      expect(locale_file.new_key_map).to be expected_locale_file_key_map
     end
   end
 
-  describe "#key_at" do
+  describe "#old_content" do
+    let(:path) { fixture_dir.join("xx/xx.yml") }
+
+    it "returns a locale file content object built from the locale file's old contents", :aggregate_failures do
+      file_content = path.read
+      expected_locale_file_content = double :locale_file_content
+
+      expect(TranslationsChecker::GitShow).to receive(:call).with(path, ref: :original).and_return file_content
+      expect(TranslationsChecker::LocaleFileContent).to receive(:new).with(file_content).and_return(expected_locale_file_content)
+      expect(locale_file.old_content).to be expected_locale_file_content
+    end
+  end
+
+  describe "#old_key_map" do
     let(:path) { "xx/yy.yml" }
 
-    it "delegates to the locale file's key map" do
-      expected_key = double :key
-      key_map = instance_double "TranslationsChecker::LocaleFileKeyMap", :locale_file_key_map
-      allow(locale_file).to receive(:key_map).and_return(key_map)
+    it "returns a locale file key map object built from the locale file's old contents", :aggregate_failures do
+      locale_file_content = instance_double "TranslationsChecker::LocaleFileContent", :locale_file_content
+      expected_locale_file_key_map = double :locale_file_key_map
 
-      expect(key_map).to receive(:key_at).with(12).and_return(expected_key)
-      expect(locale_file.key_at(12)).to be expected_key
+      expect(locale_file).to receive(:old_content).and_return(locale_file_content)
+      expect(TranslationsChecker::LocaleFileKeyMap).to receive(:new).with(locale_file_content).and_return(expected_locale_file_key_map)
+      expect(locale_file.old_key_map).to be expected_locale_file_key_map
     end
   end
 end
