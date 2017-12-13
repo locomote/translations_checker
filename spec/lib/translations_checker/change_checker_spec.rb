@@ -5,6 +5,28 @@ require "translations_checker/no_change"
 require "translations_checker/change_checker"
 
 RSpec.describe TranslationsChecker::ChangeChecker do
+  describe "#not_a_string" do
+    subject(:not_a_string_result) { checker.not_a_string }
+
+    let(:checker) { described_class.new this_change, nil }
+
+    context "when this change is a string value" do
+      let(:this_change) { instance_double TranslationsChecker::Change, :this_change, new_value: "A string" }
+
+      it "returns nil" do
+        expect(not_a_string_result).to be_nil
+      end
+    end
+
+    context "when this change is not a string value" do
+      let(:this_change) { instance_double TranslationsChecker::Change, :this_change, new_value: { a: "non-string value" } }
+
+      it "returns a non-issue" do
+        expect(not_a_string_result).to be_a TranslationsChecker::NonIssue
+      end
+    end
+  end
+
   describe "#not_deleted" do
     context "when this change is not a deletion" do
       it "returns nil" do
@@ -116,62 +138,76 @@ RSpec.describe TranslationsChecker::ChangeChecker do
   describe "#call" do
     let(:checker) { described_class.new(nil, nil) }
 
-    context "when this change is a deletion" do
-      before do
-        allow(checker).to receive(:missing_or_unchanged).and_return "missing or unchanged"
-        allow(checker).to receive(:incorrect_format).and_return "incorrect format"
-      end
-
-      context "when the other change is a deletion" do
-        it "returns a non-issue" do
-          non_issue = double :non_issue
-          expect(checker).to receive(:not_deleted).and_return non_issue
-          expect(checker.call).to be non_issue
-        end
-      end
-
-      context "when the other change is not a deletion" do
-        it "returns a not-deleted issue" do
-          not_deleted_issue = double :not_deleted
-          expect(checker).to receive(:not_deleted).and_return not_deleted_issue
-          expect(checker.call).to be not_deleted_issue
-        end
+    context "when this change is not a string value" do
+      it "returns a non-issue" do
+        non_issue = double :non_issue
+        expect(checker).to receive(:not_a_string).and_return non_issue
+        expect(checker.call).to be non_issue
       end
     end
 
-    context "when this change is not a deletion" do
+    context "when this change is a string value" do
       before do
-        allow(checker).to receive(:not_deleted).and_return nil
+        allow(checker).to receive(:not_a_string).and_return nil
       end
 
-      context "when the other change is a no-change" do
-        it "returns either a missing-new-key or unchanged-key issue" do
-          allow(checker).to receive(:incorrect_format).and_return "incorrect format"
-
-          missing_or_unchanged_issue = double :missing_or_unchanged
-          expect(checker).to receive(:missing_or_unchanged).and_return missing_or_unchanged_issue
-          expect(checker.call).to be missing_or_unchanged_issue
-        end
-      end
-
-      context "when the other change is not a no-change" do
+      context "when this change is a deletion" do
         before do
-          allow(checker).to receive(:missing_or_unchanged).and_return nil
+          allow(checker).to receive(:missing_or_unchanged).and_return "missing or unchanged"
+          allow(checker).to receive(:incorrect_format).and_return "incorrect format"
         end
 
-        context "when there is an incorrect-format issue" do
-          it "returns an incorrect-format issue" do
-            incorrect_format_issue = double :incorrect_format_issue
-            expect(checker).to receive(:incorrect_format).and_return incorrect_format_issue
-            expect(checker.call).to be incorrect_format_issue
+        context "when the other change is a deletion" do
+          it "returns a non-issue" do
+            non_issue = double :non_issue
+            expect(checker).to receive(:not_deleted).and_return non_issue
+            expect(checker.call).to be non_issue
           end
         end
 
-        context "when there is not an incorrect-format issue" do
-          it "returns a non-issue" do
-            non_issue = double :non_issue
-            expect(checker).to receive(:incorrect_format).and_return non_issue
-            expect(checker.call).to be non_issue
+        context "when the other change is not a deletion" do
+          it "returns a not-deleted issue" do
+            not_deleted_issue = double :not_deleted
+            expect(checker).to receive(:not_deleted).and_return not_deleted_issue
+            expect(checker.call).to be not_deleted_issue
+          end
+        end
+      end
+
+      context "when this change is not a deletion" do
+        before do
+          allow(checker).to receive(:not_deleted).and_return nil
+        end
+
+        context "when the other change is a no-change" do
+          it "returns either a missing-new-key or unchanged-key issue" do
+            allow(checker).to receive(:incorrect_format).and_return "incorrect format"
+
+            missing_or_unchanged_issue = double :missing_or_unchanged
+            expect(checker).to receive(:missing_or_unchanged).and_return missing_or_unchanged_issue
+            expect(checker.call).to be missing_or_unchanged_issue
+          end
+        end
+
+        context "when the other change is not a no-change" do
+          before do
+            allow(checker).to receive(:missing_or_unchanged).and_return nil
+          end
+
+          context "when there is an incorrect-format issue" do
+            it "returns an incorrect-format issue" do
+              incorrect_format_issue = double :incorrect_format_issue
+              expect(checker).to receive(:incorrect_format).and_return incorrect_format_issue
+              expect(checker.call).to be incorrect_format_issue
+            end
+          end
+
+          context "when there is not an incorrect-format issue" do
+            it "returns a non-issue" do
+              non_issue = double :non_issue
+              expect(checker).to receive(:incorrect_format).and_return non_issue
+              expect(checker.call).to be non_issue
+            end
           end
         end
       end
