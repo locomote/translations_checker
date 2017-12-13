@@ -41,4 +41,3 @@ RSpec.describe TranslationsChecker::NoChange do
     end
   end
 end
-

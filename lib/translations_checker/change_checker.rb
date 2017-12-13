@@ -5,6 +5,10 @@ module TranslationsChecker
   ChangeChecker = Struct.new(:this_change, :other_change) do
     include Concerns::Service
 
+    def not_a_string
+      return NonIssue.new unless this_change.new_value.is_a?(String)
+    end
+
     def not_deleted
       return unless this_change.deleted?
       return NonIssue.new if other_change.deleted?
@@ -29,7 +33,7 @@ module TranslationsChecker
     end
 
     def call
-      not_deleted || missing_or_unchanged || incorrect_format
+      not_a_string || not_deleted || missing_or_unchanged || incorrect_format
     end
   end
 end
