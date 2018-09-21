@@ -14,6 +14,8 @@ module TranslationsChecker
 
     using Indentation
 
+    SUPPORTED_FORMATS = %w(yml).freeze
+
     # :reek:TooManyStatements
     def call
       if issues.empty?
@@ -70,10 +72,18 @@ module TranslationsChecker
       @translated_locales ||= locales - %w(en en-AU)
     end
 
+    def git_diffs
+      GitDiff.call(LOCALES_DIR)
+    end
+
     def diffs
-      @diffs ||= GitDiff.call(LOCALES_DIR).map do |path, hunks|
+      @diffs ||= supported_git_diffs.map do |path, hunks|
         Diff.new(path, hunks)
       end
+    end
+
+    def supported_git_diffs
+      git_diffs.select{|path, hunks| SUPPORTED_FORMATS.include?(path.split('.')[-1])}
     end
 
     # :reek:FeatureEnvy
