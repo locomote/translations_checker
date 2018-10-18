@@ -14,7 +14,7 @@ module TranslationsChecker
 
     using Indentation
 
-    SUPPORTED_FORMATS = %w(yml).freeze
+    SUPPORTED_FORMATS = %w(.yml).freeze
 
     # :reek:TooManyStatements
     def call
