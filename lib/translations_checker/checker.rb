@@ -83,7 +83,7 @@ module TranslationsChecker
     end
 
     def supported_git_diffs
-      git_diffs.select { |path, hunks| SUPPORTED_FORMATS.include?(path.split('.').last) }
+      git_diffs.select { |path, _| SUPPORTED_FORMATS.include?(File.extname(path)) }
     end
 
     # :reek:FeatureEnvy
