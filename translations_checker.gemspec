@@ -19,15 +19,15 @@ Gem::Specification.new do |spec|
   spec.executables   = %w(translations_checker)
   spec.require_paths = %w(lib)
 
-  spec.required_ruby_version = ">= 2.3.1"
+  spec.required_ruby_version = ">= 2.6.7"
 
-  spec.add_runtime_dependency "activesupport", ">= 4.2.9"
+  spec.add_runtime_dependency "activesupport", "~> 5.2.6"
   spec.add_runtime_dependency "naught", "~> 1.1.0"
 
-  spec.add_development_dependency "bundler", "~> 1.16"
+  spec.add_development_dependency "bundler", "~> 2.2.17"
   spec.add_development_dependency "pry", "~> 0.11.3"
-  spec.add_development_dependency "rake", "~> 10.0"
+  spec.add_development_dependency "rake", ">= 12.3"
   spec.add_development_dependency "reek", "~> 4.7.3"
-  spec.add_development_dependency "rspec", "~> 3.0"
+  spec.add_development_dependency "rspec", ">= 3.7.0"
   spec.add_development_dependency "rubocop", "~> 0.51.0"
 end
