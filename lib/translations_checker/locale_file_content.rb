@@ -23,7 +23,7 @@ module TranslationsChecker
     private
 
     def content
-      @content ||= YAML.safe_load(yaml, [], [], true)
+      @content ||= YAML.safe_load(yaml, aliases: true)
     end
   end
 end
