@@ -23,8 +23,9 @@ Gem::Specification.new do |spec|
 
   spec.add_runtime_dependency "activesupport", "< 6.2"
   spec.add_runtime_dependency "naught", "~> 1.1.0"
+  spec.add_runtime_dependency 'concurrent-ruby', '1.3.4'
 
-  spec.add_development_dependency "bundler", "~> 2.2.17"
+  spec.add_development_dependency "bundler", "~> 2.4.22"
   spec.add_development_dependency "pry", "~> 0.11.3"
   spec.add_development_dependency "rake", ">= 12.3"
   spec.add_development_dependency "reek", "~> 4.7.3"
