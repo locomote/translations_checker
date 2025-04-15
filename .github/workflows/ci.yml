@@ -1,0 +1,64 @@
+name: ci
+
+on:
+  push:
+    branches: [ master ]
+  pull_request:
+    types: [opened, synchronize, reopened, ready_for_review]
+
+env:
+  RAILS_ENV: test
+
+jobs:
+  not-a-draft-pr:
+    name: Continue if not draft PR
+    if: github.event.pull_request.draft == false
+    runs-on: ubuntu-latest
+    steps:
+      - run: exit 0
+
+  test:
+    name: Tests for version
+    needs: not-a-draft-pr
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+
+    strategy:
+      fail-fast: false
+      matrix:
+        rails-version: ['~> 7.0.1', '~> 7.1.0', '~> 7.2.0', '~> 8.0.0']
+        ruby-version: ['3.1.7', '3.2.8', '3.3.8', '3.4.3']
+        exclude:
+          - rails-version: '~> 8.0.0'
+            ruby-version: '3.1.7'
+          - rails-version: '~> 7.0.1'
+            ruby-version: '3.4.3'
+
+    env:
+      CI_RAILS_VERSION: ${{ matrix.rails-version }}
+      CI_RUBY_VERSION: ${{ matrix.ruby-version }}
+
+    steps:
+      - uses: actions/checkout@v3
+
+      - name: Setup ruby
+        uses: ruby/setup-ruby@v1
+        with:
+          ruby-version: ${{ matrix.ruby-version }}
+
+      - name: Bundle
+        run: bundle install
+
+      - name: Run tests
+        run: bundle exec rake spec
+
+  # This is required to make requiring status checks easy in Github branch protection rules
+  test-success:
+    name: Tests
+    if: github.event.pull_request.draft == false
+    runs-on: ubuntu-latest
+    needs: test
+    steps:
+      - name: Check build matrix status
+        if: ${{ needs.test.result != 'success' }}
+        run: exit 1
