@@ -20,8 +20,8 @@ RSpec.describe TranslationsChecker::DiffBlock do
 
       it "returns the changes" do
         changes = [ double(:first_change), double(:second_change) ]
-        allow(TranslationsChecker::Change).to receive(:new).with(file_diff, "key_1", "-" => 8, "+" => 4).and_return changes[0]
-        allow(TranslationsChecker::Change).to receive(:new).with(file_diff, "key_2", "-" => 9, "+" => 5).and_return changes[1]
+        allow(TranslationsChecker::Change).to receive(:new).with(file_diff, "key_1", { "-" => 8, "+" => 4 }).and_return changes[0]
+        allow(TranslationsChecker::Change).to receive(:new).with(file_diff, "key_2", { "-" => 9, "+" => 5 }).and_return changes[1]
         expect(diff_block.changes).to eq changes
       end
     end
@@ -40,8 +40,8 @@ RSpec.describe TranslationsChecker::DiffBlock do
 
       it "returns the changes" do
         changes = [ double(:first_change), double(:second_change) ]
-        allow(TranslationsChecker::Change).to receive(:new).with(file_diff, "key/1", "-" => 8, "+" => 4).and_return changes[0]
-        allow(TranslationsChecker::Change).to receive(:new).with(file_diff, "key/2", "-" => 9, "+" => 5).and_return changes[1]
+        allow(TranslationsChecker::Change).to receive(:new).with(file_diff, "key/1", { "-" => 8, "+" => 4 }).and_return changes[0]
+        allow(TranslationsChecker::Change).to receive(:new).with(file_diff, "key/2", { "-" => 9, "+" => 5 }).and_return changes[1]
         expect(diff_block.changes).to eq changes
       end
     end
@@ -57,7 +57,7 @@ RSpec.describe TranslationsChecker::DiffBlock do
 
       it "returns the changes" do
         change = double(:change)
-        allow(TranslationsChecker::Change).to receive(:new).with(file_diff, "key", "-" => 6).and_return change
+        allow(TranslationsChecker::Change).to receive(:new).with(file_diff, "key", { "-" => 6 }).and_return change
         expect(diff_block.changes).to eq [ change ]
       end
     end
@@ -73,7 +73,7 @@ RSpec.describe TranslationsChecker::DiffBlock do
 
       it "returns the changes" do
         change = double(:change)
-        allow(TranslationsChecker::Change).to receive(:new).with(file_diff, "key", "+" => 5).and_return change
+        allow(TranslationsChecker::Change).to receive(:new).with(file_diff, "key", { "+" => 5 }).and_return change
         expect(diff_block.changes).to eq [ change ]
       end
     end
