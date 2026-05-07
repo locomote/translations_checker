@@ -20,15 +20,15 @@ Gem::Specification.new do |spec|
   spec.require_paths = %w(lib)
 
   # Rails 8 requires >= 3.2
-  spec.required_ruby_version = ENV["CI_RUBY_VERSION"] || "~> 3.1"
+  spec.required_ruby_version = ">= 3.2"
 
-  spec.add_runtime_dependency "activesupport", ENV["CI_RAILS_VERSION"] || "~> 7"
-  spec.add_runtime_dependency "naught", "~> 1.1.0"
-  spec.add_runtime_dependency 'concurrent-ruby', '1.3.4'
+  spec.add_runtime_dependency "activesupport", ">= 7.2", "< 9"
+  spec.add_runtime_dependency "naught", "~> 2.3.0"
+  spec.add_runtime_dependency 'concurrent-ruby', '>= 1.3.4'
 
   spec.add_development_dependency "bundler", "~> 2.4"
-  spec.add_development_dependency "pry", "~> 0.15.2"
-  spec.add_development_dependency "rake", ">= 12.3"
+  spec.add_development_dependency "pry", "~> 0.16.0"
+  spec.add_development_dependency "rake", ">= 13.3"
   spec.add_development_dependency "reek", "~> 4.7.3"
   spec.add_development_dependency "rspec", ">= 3.13.0"
   spec.add_development_dependency "rubocop", "~> 0.51.0"
